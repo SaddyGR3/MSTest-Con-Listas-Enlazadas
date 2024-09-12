@@ -242,7 +242,31 @@ public class ListaEnlazada : IList
             return;
         }
 
-        // Aquí manejamos los dos casos por separado: Ascendente y Descendente
+        Nodo InvertirLista(Nodo cabeza)
+        {
+            Nodo prev = null;
+            Nodo current = cabeza;
+            Nodo next = null;
+
+            while (current != null)
+            {
+                next = current.Siguiente;
+                current.Siguiente = prev;
+                current.Anterior = next;
+                prev = current;
+                current = next;
+            }
+
+            return prev; // Devuelve la nueva cabeza (el último nodo original)
+        }
+
+        // Invertir las listas si es orden descendente
+        if (direction == SortDirection.Descending)
+        {
+            listaA.Cabeza = InvertirLista(listaA.Cabeza);
+            listaB.Cabeza = InvertirLista(listaB.Cabeza);
+        }
+
         Nodo currentA = listaA.Cabeza;
         Nodo currentB = listaB.Cabeza;
         Nodo previousA = null;
@@ -261,14 +285,13 @@ public class ListaEnlazada : IList
                 {
                     Nodo nextB = currentB.Siguiente;
 
-                    // Insertar currentB antes de currentA en listA
                     if (previousA == null)
                     {
-                        listaA.Cabeza = currentB; // currentB se convierte en la nueva cabeza de listA
+                        listaA.Cabeza = currentB;
                     }
                     else
                     {
-                        previousA.Siguiente = currentB; // Conectar el nodo anterior a currentB
+                        previousA.Siguiente = currentB;
                     }
 
                     currentB.Anterior = previousA;
@@ -280,7 +303,7 @@ public class ListaEnlazada : IList
                     }
                     else
                     {
-                        listaA.Cola = currentB; // Si currentA es nulo, currentB se convierte en la nueva cola de listA
+                        listaA.Cola = currentB;
                     }
 
                     previousA = currentB;
@@ -290,30 +313,29 @@ public class ListaEnlazada : IList
         }
         else if (direction == SortDirection.Descending)
         {
-            // Fusión en orden descendente
+            // Fusión en orden descendente (ahora que las listas están invertidas)
             while (currentA != null && currentB != null)
             {
-                if (currentA.Dato >= currentB.Dato) //Si el dato de A es mayor o igual al dato de B
+                if (currentA.Dato >= currentB.Dato)
                 {
-                    previousA = currentA; //Se guarda el nodo actual de A en previousA
-                    currentA = currentA.Siguiente; //Se avanza al siguiente nodo de A
+                    previousA = currentA;
+                    currentA = currentA.Siguiente;
                 }
                 else
                 {
-                    Nodo nextB = currentB.Siguiente; //Si B es mayor que A, nextB guarda el siguiente nodo de B
+                    Nodo nextB = currentB.Siguiente;
 
-                    // Insertar currentB antes de currentA en listA
                     if (previousA == null)
                     {
-                        listaA.Cabeza = currentB; // currentB se convierte en la nueva cabeza de listA
+                        listaA.Cabeza = currentB;
                     }
                     else
                     {
-                        previousA.Siguiente = currentB; //Conectar el nodo anterior de A a currentB
+                        previousA.Siguiente = currentB;
                     }
 
                     currentB.Anterior = previousA;
-                    currentB.Siguiente = currentA; // conectar B antes de A en la lista enlazada
+                    currentB.Siguiente = currentA;
 
                     if (currentA != null)
                     {
@@ -321,11 +343,11 @@ public class ListaEnlazada : IList
                     }
                     else
                     {
-                        listaA.Cola = currentB; //Si currentA es nulo, currentB se convierte en la nueva cola de listA
+                        listaA.Cola = currentB;
                     }
 
                     previousA = currentB;
-                    currentB = nextB; // Mover currentB al siguiente nodo
+                    currentB = nextB;
                 }
             }
         }
@@ -344,15 +366,14 @@ public class ListaEnlazada : IList
 
             currentB.Anterior = previousA;
 
-            // Mover hasta el final de listB
             while (currentB.Siguiente != null)
             {
                 currentB = currentB.Siguiente;
             }
 
-            // Actualizar la cola de listA
             listaA.Cola = currentB;
         }
+
     }
 }
 
