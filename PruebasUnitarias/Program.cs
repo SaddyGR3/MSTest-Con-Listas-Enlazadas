@@ -37,12 +37,14 @@ public class Nodo
     }
 }
 
-public class ListaEnlazada : IList
+public class ListaDoble : IList
 {
     private Nodo Cabeza;
     private Nodo Cola;
+    private int tamaño;
+    private Nodo nodoMedio;
 
-    public ListaEnlazada()
+    public ListaDoble()
     {
         Cabeza = null;
         Cola = null;
@@ -55,17 +57,36 @@ public class ListaEnlazada : IList
             Console.Write(actual.Dato + " ");
             actual = actual.Siguiente;
         }
-        Console.WriteLine(); // Para imprimir una nueva línea después de la lista
+        Console.WriteLine(); //Para imprimir una nueva línea después de la lista
+    }
+    private void ActualizarNodoMedio()
+    {
+        if (tamaño == 1) // Si solo hay un nodo, el medio es la cabeza
+        {
+            nodoMedio = Cabeza;
+        }
+        else if (tamaño > 1) // Si hay más de un nodo
+        {
+            Nodo actual = Cabeza;
+            for (int i = 0; i < tamaño / 2; i++) // Recorre hasta llegar a la mitad
+            {
+                actual = actual.Siguiente;
+            }
+            nodoMedio = actual;
+        }
     }
 
     public void InsertInOrder(int value) //Este metodo inserta un nodo en la lista enlazada de forma ascendente siempre,por condicion de la tarea.
-    {
+    {   
         Nodo nuevoNodo = new Nodo(value); //Crea un nuevo nodo con el valor dado en la entrada al llamar el metodo.
+        tamaño++; // Aumentamos el tamaño de la lista al insertar un nuevo nodo
         if (Cabeza == null) //si la cabeza es nula,significa que la lista esta vacia,entonces la cabeza y la cola apuntan al nuevo nodo
         {
             Cabeza = nuevoNodo; //Tanto la cabeza como la cola ahora son el nuevo nodo,porque es el unico que hay.
             Cola = nuevoNodo;
+            nodoMedio = Cabeza;
         }
+
         else //si no es nulo significa que ya hay un nodo en la lista.
         {
             if (value < Cabeza.Dato) //si el valor es menor al de la cabeza entonces este nuevo nodo se convierte en la cabeza debido a que debe ir antes del mayor para cumplir ascendencia.
@@ -96,6 +117,7 @@ public class ListaEnlazada : IList
                 actual.Siguiente = nuevoNodo;
             }
         }
+        ActualizarNodoMedio(); // Actualizamos la referencia al nodo medio
     }
     public Nodo GetHead() //Este metodo devuelve la cabeza de la lista enlazada.
     {
@@ -109,17 +131,19 @@ public class ListaEnlazada : IList
             throw new InvalidOperationException("La lista está vacía.");
         }
 
-        int valor = Cabeza.Dato; //Guarda el valor de la cabeza en una variable.
-        Cabeza = Cabeza.Siguiente; //La cabeza ahora es el nodo siguiente al actual. 
-
-        if (Cabeza != null) //Si hay almenos un nodo en la lista.
+        int valor = Cabeza.Dato;
+        Cabeza = Cabeza.Siguiente;
+        if (Cabeza != null)
         {
-            Cabeza.Anterior = null; //El nodo anterior de la cabeza es nulo. Osea desvincula la cabeza del nodo anterior ya que este ahora no existe.
+            Cabeza.Anterior = null;
         }
         else
         {
-            Cola = null; // La lista quedó vacía
+            Cola = null;
         }
+
+        tamaño--; // Reducimos el tamaño de la lista al eliminar el nodo
+        ActualizarNodoMedio(); // Actualizamos la referencia al nodo medio
 
         return valor;
     }
@@ -131,21 +155,61 @@ public class ListaEnlazada : IList
             throw new InvalidOperationException("La lista está vacía.");
         }
 
-        int valor = Cola.Dato;//Guarda el valor de la cola en una variable.
-        Cola = Cola.Anterior; //La cola ahora es el nodo anterior al actual.
-
+        int valor = Cola.Dato;
+        Cola = Cola.Anterior;
         if (Cola != null)
         {
             Cola.Siguiente = null;
         }
         else
         {
-            Cabeza = null; // La lista quedó vacía
+            Cabeza = null;
         }
+
+        tamaño--; // Reducimos el tamaño de la lista al eliminar el nodo
+        ActualizarNodoMedio(); // Actualizamos la referencia al nodo medio
 
         return valor;
     }
 
+    public void Insertar(int valor)
+    {
+        Nodo nuevoNodo = new Nodo(valor);
+        if (Cabeza == null)
+        {
+            Cabeza = nuevoNodo;
+            Cola = nuevoNodo;
+        }
+        else
+        {
+            Cola.Siguiente = nuevoNodo;
+            nuevoNodo.Anterior = Cola;
+            Cola = nuevoNodo;
+        }
+    }
+    public void Invert(ListaDoble list)
+    {
+        if (list.Cabeza == null)
+        {
+            Console.WriteLine("La lista esta vacía");
+            return; //No hay nada que invertir
+        }
+
+        Nodo current = list.Cabeza;
+        Nodo prev = null;
+        Nodo next = null;
+
+        while (current != null)
+        {
+            next = current.Siguiente;
+            current.Siguiente = prev;
+            current.Anterior = next;
+            prev = current;
+            current = next;
+        }
+
+        list.Cabeza = prev;
+    }
     public bool DeleteValue(int value)
     {
         if (Cabeza == null)
@@ -184,22 +248,14 @@ public class ListaEnlazada : IList
 
     public int GetMiddle()
     {
-        if (Cabeza == null)
+        if (nodoMedio == null)
         {
             throw new InvalidOperationException("La lista está vacía.");
         }
 
-        Nodo lento = Cabeza;
-        Nodo rapido = Cabeza;
-
-        while (rapido != null && rapido.Siguiente != null)
-        {
-            lento = lento.Siguiente;
-            rapido = rapido.Siguiente.Siguiente;
-        }
-
-        return lento.Dato;
+        return nodoMedio.Dato;
     }
+
 
     public void MergeSorted(IList listA, IList listB, SortDirection direction)
     {
@@ -208,8 +264,8 @@ public class ListaEnlazada : IList
             throw new ArgumentNullException("Una o ambas listas son nulas.");
         }
 
-        ListaEnlazada listaA = (ListaEnlazada)listA;
-        ListaEnlazada listaB = (ListaEnlazada)listB;
+        ListaDoble listaA = (ListaDoble)listA;
+        ListaDoble listaB = (ListaDoble)listB;
 
         // Si listA está vacía, directamente asignamos los nodos de listB a listA
         if (listaA.Cabeza == null)
@@ -375,7 +431,10 @@ public class ListaEnlazada : IList
         }
 
     }
+
+    
 }
+
 
 
 public class Program
@@ -383,11 +442,11 @@ public class Program
     static void Main(string[] args)
     {
         // Crear las listas
-        ListaEnlazada listA = new ListaEnlazada();
+        ListaDoble listA = new ListaDoble();
         listA.InsertInOrder(10);
         listA.InsertInOrder(15);
 
-        ListaEnlazada listB = new ListaEnlazada();
+        ListaDoble listB = new ListaDoble();
         listB.InsertInOrder(9);
         listB.InsertInOrder(40);
         listB.InsertInOrder(50);
