@@ -214,7 +214,7 @@ namespace TestProject1
             lista.InsertInOrder(1);
 
             // Act
-            int valorMedio = lista.GetMiddle(); // Capturamos el valor del nodo medio
+            int valorMedio = lista.GetMiddle(); //Obtenemos el valor del nodo del medio
 
             // Assert
             Assert.AreEqual(1, valorMedio, "deberia ser 1");
@@ -229,7 +229,7 @@ namespace TestProject1
             lista.InsertInOrder(2);
 
             // Act
-            int valorMedio = lista.GetMiddle(); // Capturamos el valor del nodo medio
+            int valorMedio = lista.GetMiddle(); 
 
             // Assert
             Assert.AreEqual(2, valorMedio, "deberia ser 2");
@@ -245,7 +245,7 @@ namespace TestProject1
             lista.InsertInOrder(2);
 
             // Act
-            int valorMedio = lista.GetMiddle(); //Capturamos el valor del nodo medio
+            int valorMedio = lista.GetMiddle(); 
 
             // Assert
             Assert.AreEqual(1, valorMedio, "deberia ser 1");
@@ -262,14 +262,11 @@ namespace TestProject1
             lista.InsertInOrder(3);
 
             // Act
-            int valorMedio = lista.GetMiddle(); // Capturamos el valor del nodo medio
+            int valorMedio = lista.GetMiddle();
 
             // Assert
             Assert.AreEqual(2, valorMedio, "deberia ser 2");
         }
-
-
-
 
 
 

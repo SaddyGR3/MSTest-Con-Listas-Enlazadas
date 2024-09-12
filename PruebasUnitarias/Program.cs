@@ -49,7 +49,7 @@ public class ListaDoble : IList
         Cabeza = null;
         Cola = null;
     }
-    public void ImprimirLista()
+    public void ImprimirLista() //Metodo para imprimir la lista debido a que hay que recorrer la lista para ir imprimiendo cada dato en ella.
     {
         Nodo actual = Cabeza;
         while (actual != null)
@@ -57,18 +57,18 @@ public class ListaDoble : IList
             Console.Write(actual.Dato + " ");
             actual = actual.Siguiente;
         }
-        Console.WriteLine(); //Para imprimir una nueva línea después de la lista
+        Console.WriteLine(); 
     }
-    private void ActualizarNodoMedio()
+    private void ActualizarNodoMedio() //Metodo para ir actualizando el nodo del medio cada vez que se inserta o elimina un nodo de la lista.
     {
-        if (tamaño == 1) // Si solo hay un nodo, el medio es la cabeza
+        if (tamaño == 1) //Si solo hay un nodo, el medio es la cabeza
         {
             nodoMedio = Cabeza;
         }
-        else if (tamaño > 1) // Si hay más de un nodo
+        else if (tamaño > 1) //Si hay mas de un nodo
         {
             Nodo actual = Cabeza;
-            for (int i = 0; i < tamaño / 2; i++) // Recorre hasta llegar a la mitad
+            for (int i = 0; i < tamaño / 2; i++) //Recorre hasta llegar a la mitad
             {
                 actual = actual.Siguiente;
             }
@@ -117,7 +117,7 @@ public class ListaDoble : IList
                 actual.Siguiente = nuevoNodo;
             }
         }
-        ActualizarNodoMedio(); // Actualizamos la referencia al nodo medio
+        ActualizarNodoMedio(); //Actualizamos la referencia al nodo medio
     }
     public Nodo GetHead() //Este metodo devuelve la cabeza de la lista enlazada.
     {
@@ -131,19 +131,19 @@ public class ListaDoble : IList
             throw new InvalidOperationException("La lista está vacía.");
         }
 
-        int valor = Cabeza.Dato;
-        Cabeza = Cabeza.Siguiente;
+        int valor = Cabeza.Dato; //Se guarda el valor de la cabeza en una variable
+        Cabeza = Cabeza.Siguiente; //Cabeza pasa a ser el nodo siguiente
         if (Cabeza != null)
         {
-            Cabeza.Anterior = null;
+            Cabeza.Anterior = null; //Eliminamos la referencia al nodo anterior
         }
         else
         {
             Cola = null;
         }
 
-        tamaño--; // Reducimos el tamaño de la lista al eliminar el nodo
-        ActualizarNodoMedio(); // Actualizamos la referencia al nodo medio
+        tamaño--; //Se reduce el tamaño de la lista al eliminar un nodo
+        ActualizarNodoMedio(); //Se actualiza la referencia
 
         return valor;
     }
@@ -155,24 +155,24 @@ public class ListaDoble : IList
             throw new InvalidOperationException("La lista está vacía.");
         }
 
-        int valor = Cola.Dato;
-        Cola = Cola.Anterior;
+        int valor = Cola.Dato; //Guarda el valor de la cola en una variable
+        Cola = Cola.Anterior; //Cola pasa a ser el nodo anterior
         if (Cola != null)
         {
-            Cola.Siguiente = null;
+            Cola.Siguiente = null;//Se elimina la referencia al nodo siguiente
         }
         else
         {
             Cabeza = null;
         }
 
-        tamaño--; // Reducimos el tamaño de la lista al eliminar el nodo
-        ActualizarNodoMedio(); // Actualizamos la referencia al nodo medio
+        tamaño--; //Se reduce el tamaño de la lista al eliminar un nodo
+        ActualizarNodoMedio(); //Se actualiza la referencia
 
         return valor;
     }
 
-    public void Insertar(int valor)
+    public void Insertar(int valor) //Metodo para insertar cualquier tipo de lista,sin orden.
     {
         Nodo nuevoNodo = new Nodo(valor);
         if (Cabeza == null)
@@ -187,7 +187,7 @@ public class ListaDoble : IList
             Cola = nuevoNodo;
         }
     }
-    public void Invert(ListaDoble list)
+    public void Invert(ListaDoble list)//Metodo para invertir la lista enlazada sin crear una nueva lista.
     {
         if (list.Cabeza == null)
         {
@@ -195,22 +195,22 @@ public class ListaDoble : IList
             return; //No hay nada que invertir
         }
 
-        Nodo current = list.Cabeza;
+        Nodo current = list.Cabeza; //La estrategia es utilizar 3 punteros, uno que apunta al nodo actual,otro al nodo anterior y otro al nodo siguiente.
         Nodo prev = null;
         Nodo next = null;
 
-        while (current != null)
+        while (current != null) //Cuando el nodo actual sea nulo significa que se llego al final de la lista que queriamos rotar
         {
-            next = current.Siguiente;
-            current.Siguiente = prev;
-            current.Anterior = next;
-            prev = current;
-            current = next;
+            next = current.Siguiente;//Se guarda el nodo siguiente en una variable
+            current.Siguiente = prev; //El nodo siguiente ahora apunta al nodo anterior, en un inicio es null.
+            current.Anterior = next; //El nodo anterior ahora apunta al nodo siguiente, que es el nodo siguiente que guardamos.
+            prev = current; //El nodo anterior ahora es el nodo actual
+            current = next;//El nodo actual ahora es el nodo siguiente
         }
 
-        list.Cabeza = prev;
+        list.Cabeza = prev; //El ultimo nodo procesado es la nueva cabeza
     }
-    public bool DeleteValue(int value)
+    public bool DeleteValue(int value)//Eliminar el valor dado como argumento de la lista enlazada
     {
         if (Cabeza == null)
         {
@@ -234,19 +234,19 @@ public class ListaDoble : IList
         {
             if (actual.Dato == value) //si se llega al dato que se busca eliminar 
             {
-                actual.Anterior.Siguiente = actual.Siguiente; //esto significa que el nodo anterior al nodo actual ahora apunta al nodo siguiente.
-                if (actual.Siguiente != null)
+                actual.Anterior.Siguiente = actual.Siguiente; //esto significa que el nodo anterior al nodo actual ahora apunta al nodo siguiente del nodo actual.
+                if (actual.Siguiente != null) //pero si el nodo siguiente del nodo actual no es nulo
                 {
-                    actual.Siguiente.Anterior = actual.Anterior;
+                    actual.Siguiente.Anterior = actual.Anterior; //entonces el nodo anterior del nodo siguiente del nodo actual ahora apunta al nodo anterior del nodo actual.
                 }
-                return true;
+                return true;//Se borro exitosamente el nodo
             }
-            actual = actual.Siguiente;
+            actual = actual.Siguiente;//Si el nodo actual no es el que se busca,se pasa al siguiente nodo.
         }
         return false; // No se encontró el valor
     }
 
-    public int GetMiddle()
+    public int GetMiddle()//Retorna el dato del medio unicamente accediendo una vez a memoria.
     {
         if (nodoMedio == null)
         {
@@ -259,25 +259,26 @@ public class ListaDoble : IList
 
     public void MergeSorted(IList listA, IList listB, SortDirection direction)
     {
+        //Excepcion si alguna de las listas es nula
         if (listA == null || listB == null)
         {
             throw new ArgumentNullException("Una o ambas listas son nulas.");
         }
-
+       
         ListaDoble listaA = (ListaDoble)listA;
         ListaDoble listaB = (ListaDoble)listB;
 
-        // Si listA está vacía, directamente asignamos los nodos de listB a listA
+        //Si listA esta vacía, se asigna listB a listA
         if (listaA.Cabeza == null)
         {
             if (direction == SortDirection.Ascending)
             {
-                listaA.Cabeza = listaB.Cabeza;
+                listaA.Cabeza = listaB.Cabeza; //Al pasar la cabeza y la cola de la lista B a la lista A, la lista A ahora es la lista B
                 listaA.Cola = listaB.Cola;
             }
-            else if (direction == SortDirection.Descending)
+            else if (direction == SortDirection.Descending) //Si hay que ordenarla de forma descendente
             {
-                // Invertimos la lista B y asignamos a listA
+                //Invertimos la lista B y asignamos a listA
                 Nodo current = listaB.Cabeza;
                 Nodo prev = null;
                 Nodo next = null;
@@ -298,7 +299,7 @@ public class ListaDoble : IList
             return;
         }
 
-        Nodo InvertirLista(Nodo cabeza)
+        Nodo InvertirLista(Nodo cabeza) //Otro metodo invertir lista,pero esta vez se recibe la cabeza de la lista a invertir.
         {
             Nodo prev = null;
             Nodo current = cabeza;
@@ -316,23 +317,61 @@ public class ListaDoble : IList
             return prev; // Devuelve la nueva cabeza (el último nodo original)
         }
 
-        // Invertir las listas si es orden descendente
+        //Invertir las listas en orden descendente
         if (direction == SortDirection.Descending)
         {
             listaA.Cabeza = InvertirLista(listaA.Cabeza);
             listaB.Cabeza = InvertirLista(listaB.Cabeza);
         }
 
-        Nodo currentA = listaA.Cabeza;
+        Nodo currentA = listaA.Cabeza; //Los 3 punteros para recorrer las listas
         Nodo currentB = listaB.Cabeza;
         Nodo previousA = null;
 
-        if (direction == SortDirection.Ascending)
+        if (direction == SortDirection.Ascending)//ordenar ambas listas de forma ascendente
         {
-            // Fusión en orden ascendente
             while (currentA != null && currentB != null)
             {
-                if (currentA.Dato <= currentB.Dato)
+                if (currentA.Dato <= currentB.Dato)//Si el dato de la lista A es menor o igual al dato de la lista B
+                {
+                    previousA = currentA; //El nodo anterior de la lista A es el nodo actual de la lista A
+                    currentA = currentA.Siguiente;//El nodo actual de la lista A ahora es el nodo siguiente de la lista A
+                }
+                else
+                {
+                    Nodo nextB = currentB.Siguiente; //Guardamos el nodo siguiente de la lista B
+
+                    if (previousA == null) //Si el nodo anterior de la lista A es nulo
+                    {
+                        listaA.Cabeza = currentB; //Solo hay un nodo en la lista A,entonces la cabeza de la lista A ahora es el nodo actual de la lista B
+                    }
+                    else
+                    {
+                        previousA.Siguiente = currentB;//pero si no es nulo,entonces el nodo siguiente del nodo anterior de la lista A ahora es el nodo actual de la lista B
+                    }
+
+                    currentB.Anterior = previousA; //El nodo anterior del nodo actual de la lista B ahora es el nodo anterior de la lista A
+                    currentB.Siguiente = currentA; //El nodo siguiente del nodo actual de la lista B ahora es el nodo actual de la lista A
+
+                    if (currentA != null) //si el nodo actual de la lista A no es nulo
+                    {
+                        currentA.Anterior = currentB; //El nodo anterior del nodo actual de la lista A ahora es el nodo actual de la lista B
+                    }
+                    else
+                    {
+                        listaA.Cola = currentB; //Si el nodo actual de la lista A es nulo,entonces la cola de la lista A ahora es el nodo actual de la lista B
+                    }
+
+                    previousA = currentB; //se guarda el nodo actual de la lista B en el nodo anterior de la lista A
+                    currentB = nextB; //se guarda el nodo siguiente de la lista B en el nodo actual de la lista B
+                }
+            }
+        }
+        else if (direction == SortDirection.Descending) //ordenar ambas listas de forma descendente,primero se invirtieron para facilitar el proceso.
+        {
+            while (currentA != null && currentB != null)
+            {
+                if (currentA.Dato >= currentB.Dato)  //Se sigue exactamente el mismo proceso que ascendente,solo que se cambia el signo de la comparacion. Y desde un inicio se rotaron para que quedaran de forma descendente desde un principio.
                 {
                     previousA = currentA;
                     currentA = currentA.Siguiente;
@@ -367,48 +406,8 @@ public class ListaDoble : IList
                 }
             }
         }
-        else if (direction == SortDirection.Descending)
-        {
-            // Fusión en orden descendente (ahora que las listas están invertidas)
-            while (currentA != null && currentB != null)
-            {
-                if (currentA.Dato >= currentB.Dato)
-                {
-                    previousA = currentA;
-                    currentA = currentA.Siguiente;
-                }
-                else
-                {
-                    Nodo nextB = currentB.Siguiente;
 
-                    if (previousA == null)
-                    {
-                        listaA.Cabeza = currentB;
-                    }
-                    else
-                    {
-                        previousA.Siguiente = currentB;
-                    }
-
-                    currentB.Anterior = previousA;
-                    currentB.Siguiente = currentA;
-
-                    if (currentA != null)
-                    {
-                        currentA.Anterior = currentB;
-                    }
-                    else
-                    {
-                        listaA.Cola = currentB;
-                    }
-
-                    previousA = currentB;
-                    currentB = nextB;
-                }
-            }
-        }
-
-        // Si queda algún nodo en la lista B, añadirlos al final de la lista A
+        //Si queda algun nodo en la lista B,se agrega al final de la lista A
         if (currentB != null)
         {
             if (previousA == null)
@@ -441,7 +440,7 @@ public class Program
 {
     static void Main(string[] args)
     {
-        // Crear las listas
+        //Creacion de las listas
         ListaDoble listA = new ListaDoble();
         listA.InsertInOrder(10);
         listA.InsertInOrder(15);
@@ -451,14 +450,14 @@ public class Program
         listB.InsertInOrder(40);
         listB.InsertInOrder(50);
 
-        // Realizar la fusión en orden descendente
+        //Se unen ambas en descendente
         listA.MergeSorted(listA, listB, SortDirection.Descending);
 
-        // Imprimir el resultado
+        //Se imprime el resultado
         Console.WriteLine("Lista fusionada en orden descendente:");
         listA.ImprimirLista();
 
-        // Esperar a que el usuario presione una tecla antes de salir
+        //Cuando el usuario presiona una tecla, el programa se cierra.
         Console.ReadKey();
     }
 }
